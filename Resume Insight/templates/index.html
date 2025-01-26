@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Insights</title>
+    <meta
+      name="description"
+      content="Get professional insights on your resume matching with job descriptions"
+    />
+
+    <!-- Preload Critcal assets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.cdnfonts.com/css/amazon-ember?styles=109935,109934,109930,109932,109925,109927"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.cdnfonts.com/css/pf-dindisplay-pro?styles=30025"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheets -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <style></style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo-container">
+          <img
+            src="{{ url_for('static', filename='images/Logo.png') }}"
+            alt="Resume Insight Logo"
+            class="logo-image"
+          />
+          <h1 class="logo-text">ResumeInsight</h1>
+        </div>
+      </div>
+    </header>
+    <hr />
+    <!-- Main -->
+    <div class="main-container">
+      <div class="hero">
+        <div class="form-container-l">
+          <p>Get resume feedback report and know what to improve</p>
+          <img
+            src="{{ url_for('static', filename='images/Cloud.png') }}"
+            alt=""
+          />
+        </div>
+
+        <div class="form-container-r">
+          <form
+            id="analysisForm"
+            action="/analyze"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="form-group">
+              <label class="form-label" for="resume">
+                <i class="fas fa-file-alt label-icon"></i>
+                <p>Resume</p>
+              </label>
+              <div class="file-input-wrapper" id="dropZone">
+                <img
+                  class="form-img"
+                  src="{{ url_for('static', filename='images/Small Cloud.png') }}"
+                  alt=""
+                />
+                <p style="color: #b9babd">
+                  Drag and drop your resume here or click to browse
+                </p>
+                <input
+                  type="file"
+                  id="resume"
+                  name="resume"
+                  class="file-input"
+                  accept="application/pdf"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="job_description">
+                <i class="fas fa-briefcase label-icon"></i>
+                <p>Job Description</p>
+              </label>
+              <textarea
+                id="job_description"
+                name="job_description"
+                placeholder="Enter the Job Description..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group button-container">
+              <button
+                type="button"
+                class="action-btn"
+                data-action="Analyze Resume"
+              >
+                <i class="fas fa-analytics"></i> Analyze Resume
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultContainer" class="result-container" style="display: none">
+      <p id="resultAnalysis">Analysis Results</p>
+      <div id="loadingSpinner" class="loading-spinner" style="display: none">
+        <div class="spinner"></div>
+        <span>Analyzing your resume...</span>
+      </div>
+      <div id="resultContent" class="result-content"></div>
+    </div>
+
+    <!-- Content -->
+    <section
+      class="resume-checker-section"
+      aria-labelledby="resume-checker-title"
+    >
+      <img
+        loading="lazy"
+        src="{{ url_for('static', filename='images/resume-checker-1.jpeg') }}"
+        class="resume-checker-image"
+        alt=""
+      />
+      <div class="resume-checker-content">
+        <h2 id="resume-checker-title" class="resume-checker-title">
+          Why use a Resume Checker?
+        </h2>
+        <p class="resume-checker-description">
+          From hitting the right keywords and showcasing your achievements to
+          adding metrics that prove your value—there's a lot to consider. And
+          the stakes are high: 6 in 10 recruiters will reject a resume with any
+          error. But don't worry. Our resume scanner is here to ensure your
+          resume is flawless, helping you avoid mistakes and stand out from the
+          competition.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="resume-checker-section"
+      aria-labelledby="resume-checker-title"
+    >
+      <div class="resume-checker-content">
+        <h2 id="resume-checker-title" class="resume-checker-title">
+          Use ATS to your Advantage
+        </h2>
+        <p class="resume-checker-description">
+          Our powerful ATS resume scanner uses an advanced algorithm to catch
+          grammatical, spelling, and punctuation mistakes. But it goes further.
+          It offers tailored advice on which skills and keywords to emphasize,
+          helping you pass resume screening software. Plus, you'll get tips on
+          phrasing your sentences for maximum impact.We handle the proofreading
+          and editing, so you can focus on landing more interviews and what
+          truly matters.
+        </p>
+      </div>
+      <img
+        loading="lazy"
+        src="{{ url_for('static', filename='images/resume-checker-2.jpeg') }}"
+        class="resume-checker-image"
+        alt=""
+      />
+    </section>
+
+    <section
+      class="resume-checker-section"
+      aria-labelledby="resume-checker-title"
+    >
+      <img
+        loading="lazy"
+        src="{{ url_for('static', filename='images/resume-checker-3.jpeg') }}"
+        class="resume-checker-image"
+        alt=""
+      />
+      <div class="resume-checker-content">
+        <h2 id="resume-checker-title" class="resume-checker-title">
+          Pass the ATS test with our Resume Scanner
+        </h2>
+        <p class="resume-checker-description">
+          Worried your resume might not make it through the ATS? Don't be! Our
+          resume checker helps you align your resume with the job description
+          effortlessly. Just paste the job ad, hit scan, and we'll handle the
+          rest. If any tweaks are needed, we'll guide you through them step by
+          step. It's that simple.
+        </p>
+      </div>
+    </section>
+
+    <section class="working">
+      <p class="working-title">How it Works?</p>
+      <img
+        src="{{ url_for('static', filename='images/working.png') }}"
+        alt=""
+      />
+    </section>
+
+    <!-- FAQ's -->
+    <div class="faq-container">
+      <h1 class="faq-title">Frequently Asked Questions</h1>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">
+            What is an ATS and how does it affect my resume?
+          </button>
+          <div class="faq-answer">
+            <p>
+              An Applicant Tracking System (ATS) is software used by
+              organizations to streamline the hiring process. It automates
+              resume management, enabling recruiters to sort, filter, and
+              evaluate large volumes of applications efficiently. When you apply
+              for a job online, your resume is often scanned by an ATS before it
+              reaches human eyes. ATS works by parsing your resume, analyzing
+              its content, and comparing it to the job description. It
+              identifies keywords, skills, qualifications, and experiences
+              relevant to the role. Resumes that align closely with the job's
+              requirements receive higher scores, increasing their chances of
+              being forwarded to recruiters. However, ATS can also reject
+              resumes that don't meet specific criteria. This might happen if
+              your resume uses complex formatting (like tables or graphics) that
+              the system cannot read or lacks keywords critical to the role. For
+              instance, omitting terms like "project management" or "data
+              analysis" for a relevant job could lead to a low score. To succeed
+              in an ATS screening, tailor your resume for each job by including
+              relevant keywords from the job description. Use clear headings,
+              simple formatting, and standard fonts to ensure readability.
+              Optimizing your resume for ATS improves your chances of
+              progressing in the hiring process, bringing you closer to your
+              dream job.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">How do I check my resume score?</button>
+          <div class="faq-answer">
+            <p>
+              Checking your resume score involves analyzing how well it aligns
+              with job descriptions and applicant tracking system (ATS)
+              requirements. Here's a step-by-step guide on how to do it:
+              <br />
+              <br /><b> 1.Use Online Resume-Scanning Tools</b> - There are
+              numerous online platforms and tools specifically designed to
+              evaluate resumes against ATS systems. Examples include Jobscan,
+              Zety, Resume Worded, and TopResume. These tools: - Compare your
+              resume with job descriptions. - Provide a percentage score based
+              on keyword matching, formatting, and relevance. - Offer actionable
+              suggestions for improvement. <br /><br />
+              <b>2. Compare with Job Descriptions</b>
+              - Manually compare your resume with the job posting. Highlight
+              keywords, skills, and qualifications listed in the job ad, then
+              ensure they are reflected in your resume. Tools like Grammarly or
+              Microsoft Word can also help with grammar and readability.
+              <br />
+              <br /><b>3.Check for Formatting Compatibility</b> - Ensure your
+              resume uses a clean, ATS-friendly format: - Avoid graphics,
+              tables, and unusual fonts. - Use standard sections like
+              "Experience," "Education," and "Skills." - Save and upload your
+              resume in formats like .docx or .pdf. <br />
+              <br /><b>4. Get Feedback -</b>
+              Share your resume with mentors, recruiters, or career coaches who
+              can provide insights and suggestions for improvement. By regularly
+              assessing your resume score, you can optimize it to increase your
+              chances of making it past ATS systems and impressing recruiters.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What is a good ATS score?</button>
+          <div class="faq-answer">
+            <p>
+              A good ATS (Applicant Tracking System) score typically falls
+              between <b>80%</b> and <b>100%</b>. This score range indicates
+              that your resume closely matches the job description and has a
+              high chance of being selected for further review by recruiters.
+              However, the exact score considered "good" may vary depending on
+              the employer, the complexity of the role, and the specific ATS
+              software used.<br /><br />
+              <b> Key Factors That Contribute to a Good ATS Score:</b>
+              <br /><br />
+              <b>1.Keyword Matching:</b> - Use keywords and phrases from the job
+              description, especially for skills, job titles, and
+              certifications. - Include both hard skills (e.g., "data analysis,"
+              "Python") and soft skills (e.g., "team collaboration,"
+              "problem-solving"). <br /><br />
+              <b>2.Relevant Experience:</b> - Highlight job-related achievements
+              and experiences that align with the requirements of the role.<br /><br />
+              <b>3.ATS-Friendly Formatting:</b> - Use simple, clear formatting
+              without images, tables, or columns. - Stick to standard section
+              headings like "Experience," "Education," and "Skills."
+              <br /><br />
+              <b>4. File Format:</b> - Save your resume as a .docx or .pdf file,
+              depending on the employer's preference. <br /><br />
+              <b>Tips for Achieving a High ATS Score:</b> - Tailor your resume
+              for each job application. - Avoid keyword stuffing (adding
+              keywords unnaturally). - Proofread for spelling and grammar
+              errors. - Use online ATS resume-checking tools like Jobscan or
+              Resume Worded to analyze and improve your score. A strong ATS
+              score increases your chances of advancing to the next stage of the
+              hiring process.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            How can I proofread my resume to avoid errors?
+          </button>
+          <div class="faq-answer">
+            <p>
+              Proofreading your resume is essential to ensure it's error-free
+              and professional. Here are steps to effectively proofread your
+              resume and avoid mistakes:<br /><br />
+
+              <b>1. Take a Break Before Reviewing</b>
+              After drafting your resume, step away for a while. Reviewing it
+              with fresh eyes helps you spot errors you might otherwise miss.<br /><br />
+
+              <b> 2. Read It Aloud</b>
+              Reading your resume aloud helps you catch awkward phrasing,
+              missing words, or grammatical errors. Hearing the text can make
+              inconsistencies more noticeable.<br /><br />
+
+              <b> 3. Check for Spelling and Grammar Errors </b>
+              - Use tools like
+              <b
+                >Grammarly, Microsoft Word's spelling checker, or Hemingway
+                Editor</b
+              >for grammar and spelling suggestions. - Watch out for common
+              errors, such as misuse of homophones (e.g., "their" vs.
+              "there").<br /><br />
+
+              <b> 4. Verify Consistency</b>
+              - Ensure consistent formatting, such as font size, style, and
+              bullet point alignment. - Check for uniform use of dates (e.g.,
+              "Jan 2022" vs. "January 2022"). - Maintain consistency in verb
+              tense (e.g., past tense for previous jobs, present tense for
+              current roles).<br /><br />
+
+              <b> 5. Focus on Numbers and Facts</b>
+              - Double-check any numbers, percentages, or statistics you've
+              included to ensure accuracy. - Verify that contact information
+              (phone number, email address) is correct.<br /><br />
+
+              <b> 6. Tailor for ATS Compatibility</b>
+              - Use simple formatting, standard fonts (e.g., Arial, Calibri),
+              and avoid graphics or tables that ATS systems may misinterpret.<br /><br />
+
+              <b> 7. Get a Second Opinion</b>
+              Ask a friend, mentor, or professional to review your resume. A
+              fresh perspective can identify mistakes you might overlook.<br /><br />
+
+              <b> 8. Print It Out</b>
+              Reviewing a printed version can help you spot errors that may not
+              be as obvious on a screen.<br /><br />
+
+              <b> 9. Cross-Check Job</b> Descriptions** Ensure your resume
+              matches the job requirements, focusing on relevant skills and
+              keywords.<br /><br />
+
+              By taking these steps, you can polish your resume to perfection
+              and increase your chances of making a great impression on
+              employers.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            What is resume optimization, and why is it important?
+          </button>
+          <div class="faq-answer">
+            <p>
+              Resume optimization is the process of tailoring your resume to
+              align with a specific job description and ensure compatibility
+              with Applicant Tracking Systems (ATS). This involves strategically
+              using keywords, emphasizing relevant skills, and structuring your
+              resume in a way that meets industry standards and ATS
+              requirements.<br /><br />
+
+              <b>Key Steps in Resume Optimization:</b><br />
+              <b>1.Keyword Integration</b> Identify keywords from the job
+              posting (e.g., skills, qualifications, and job-specific terms) and
+              incorporate them naturally into your resume.<br /><br />
+
+              <b>2.Highlight Relevant Skills and Experience</b> Focus on
+              accomplishments and experiences that directly match the job
+              requirements. Use quantifiable achievements to demonstrate your
+              value.<br /><br />
+
+              <b>3.ATS-Friendly Formatting</b> Use simple layouts, standard
+              fonts, and avoid graphics, tables, and non-standard file formats.
+              Ensure your resume is scannable by ATS software.<br /><br />
+
+              <b>4.Tailor for Each Job</b> Customize your resume for each
+              application by aligning it with the specific responsibilities and
+              qualifications of the job.<br /><br />
+
+              <b> Why is Resume Optimization Important?</b><br />
+
+              <b>1.Improves ATS Compatibility</b> Most companies use ATS to
+              filter resumes. Optimized resumes have a higher chance of passing
+              the ATS screening and reaching human recruiters.<br /><br />
+
+              <b>.2Increases Relevance</b> Tailoring your resume to a specific
+              job highlights your most relevant skills and experiences, making
+              you a stronger candidate for the role.<br /><br />
+
+              <b>3.Boosts Visibility</b> Recruiters often focus on resumes that
+              align closely with their requirements. An optimized umere
+              increases your likelihood of being noticed.<br /><br />
+
+              <b>4.Enhances Professional Presentation</b> Well-structured and
+              targeted resumes create a strong first impression, showcasing your
+              professionalism and attention to detail.<br /><br />
+
+              <b>5.Improves Job Search Success</b> By aligning with both ATS
+              algorithms and recruiter preferences, resume optimization
+              increases your chances of being called for interviews.<br /><br />
+
+              In a competitive job market, resume optimization is essential to
+              ensure your application stands out and effectively communicates
+              your qualifications to potential employers
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            How does an ATS resume checker work?
+          </button>
+          <div class="faq-answer">
+            <p>
+              An ATS (Applicant Tracking System) resume checker analyzes resumes
+              to determine how well they align with job requirements. It uses
+              algorithms to scan, parse, and rank resumes based on their content
+              and format, ensuring that only the most relevant ones reach hiring
+              managers.<br /><br />
+
+              Heres How an ATS Resume Checker Works:<br />
+
+              <b>1.Resume Parsing</b>
+              - The ATS converts your resume into a standardized format,
+              breaking it into key sections like "Experience," "Education," and
+              "Skills." - It extracts information such as job titles, dates of
+              employment, skills, and certifications.<br /><br />
+
+              <b>2.Keyword Matching</b>
+              - The ATS compares the extracted content against keywords and
+              phrases from the job description. - Keywords may include specific
+              skills, tools, qualifications, and job-related terminology (e.g.,
+              "Python programming," "project management"). - Resumes with more
+              relevant keywords score higher.<br /><br />
+
+              <b>3.Scoring and Ranking</b>
+              - The system assigns a score to your resume based on how well it
+              matches the job description. - Resumes are ranked, with the
+              top-scoring ones forwarded to hiring managers.<br /><br />
+
+              <b>4.Assessing Formatting</b>
+              - ATS checks if your resume is formatted in an ATS-friendly
+              manner. It may reject resumes with: - Non-standard fonts. -
+              Complex formatting (e.g., tables, graphics, columns). -
+              Incompatible file formats (e.g., .png or .jpeg).<br /><br />
+
+              <b>5.Evaluating Structure and Content</b>
+              - It looks for specific sections and content, such as contact
+              details, relevant experience, and educational qualifications. -
+              Missing sections or poorly organized content may lower your
+              score.<br /><br />
+
+              <b>6.Providing Feedback</b> (Optional for certain ATS checkers) -
+              Some ATS tools provide feedback, highlighting areas for
+              improvement, such as missing keywords, formatting issues, or
+              unclear phrasing.<br /><br />
+
+              <b> Why Is an ATS Resume Checker Important</b>
+              - Many companies use ATS to streamline hiring and handle large
+              volumes of applications. - Optimizing your resume for ATS ensures
+              it passes the initial screening, increasing your chances of being
+              reviewed by a recruiter.<br /><br />
+
+              <b> How to Use an ATS Resume Checker</b>
+              - Upload your resume and the job description into an online tool
+              like Jobscan, Resunate, or Resume Worded. - Review the detailed
+              analysis and recommendations to improve keyword matching,
+              formatting, and relevance.<br /><br />
+
+              By tailoring your resume to pass ATS checks, you can improve your
+              job application's visibility and effectiveness.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            How can a resume scanner help me improve my job application?
+          </button>
+          <div class="faq-answer">
+            <p>
+              A resume scanner is a digital tool designed to analyze your resume
+              and provide actionable insights to improve its alignment with job
+              descriptions and industry standards. It helps identify gaps,
+              suggests enhancements, and ensures your resume is both
+              ATS-friendly and appealing to recruiters.<br /><br />
+
+              <b>Key Benefits of Using a Resume Scanner:</b>
+
+              <br /><br />1.Identifies critical keywords and phrases from the
+              job description that are missing in your resume. Helps you
+              incorporate these keywords naturally to increase relevance and
+              improve ATS compatibility. ATS Compatibility Check
+
+              <br /><br />2.Ensures your resume is formatted correctly for
+              Applicant Tracking Systems. Highlights issues such as complex
+              layouts, tables, or unsupported file formats that could lead to
+              rejection. Skills Matching
+
+              <br /><br />3.Evaluates whether your skills align with the job
+              requirements. Provides suggestions to add or emphasize specific
+              skills that make you a better fit for the role. Content
+              Improvement
+
+              <br /><br />4.Highlights vague or generic phrases and suggests
+              replacing them with quantifiable achievements or specific
+              examples. Identifies redundant or irrelevant information, helping
+              you streamline your resume. Grammar and Spelling Check
+
+              <br /><br />5.Flags grammatical errors, typos, and awkward
+              phrasing to ensure a polished and professional resume.
+              Customization for Specific Roles
+
+              <br /><br />6.Helps tailor your resume for different job
+              applications by analyzing multiple job descriptions. Provides
+              insights on which experiences, skills, and accomplishments to
+              prioritize. Scoring and Feedback
+
+              <br /><br />7.Assigns a score to your resume based on its
+              alignment with the job description. Offers detailed feedback on
+              areas for improvement, making it easier to refine your resume.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-content">
+      <img
+        src="{{ url_for('static', filename='images/Footer.png') }}"
+        alt="Footer Image"
+        class="center-image"
+      />
+
+      <div class="team-section">
+        <h3 class="heading">Confidence Starts with the Right Resume.</h3>
+        <div class="team-members">
+          <p class="left">Ayush Upadhayay [E23CSEU1146]</p>
+          <p class="right">Yuvraj Tyagi [E23CSEU1029]</p>
+          <p class="left">Divyansh Jain [E23CSEU1042]</p>
+          <p class="right">Parth Azad [E23CSEU1032]</p>
+          <p class="left">Dhruv Raheja [E23CSEU1031]</p>
+          <p class="right">Yashvardhan Dhaka [E23CSEU1192]</p>
+        </div>
+      </div>
+      <h1 class="footer-tname">Resume Insights</h1>
+      <div class="copyright">
+        &copy; <span id="currentYear"></span> Resume Insight. All rights
+        reserved.
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
