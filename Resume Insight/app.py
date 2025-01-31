@@ -17,4 +17,4 @@ from main import setup_routes
 setup_routes(app)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
